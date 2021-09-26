@@ -29,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
 
       }
       else if(input!="123456" && input.length ==6){
-        _showMaterialDialog("ERROR","รหัสผ่านผิด");
+        _showMaterialDialog("ERROR","รหัสผ่านผิด !!!");
         input = "";
 
       }
