@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_food/pages/home/home_page.dart';
 import 'package:flutter_food/pages/login/login_page.dart';
 
 void main() {
@@ -20,6 +21,12 @@ class MyApp extends StatelessWidget {
             bodyText2: TextStyle(fontSize: 14.0)),
       ),
       home: LoginPage(),
+      routes: {
+        '/login' : (context) => const LoginPage(),
+        '/home' : (context) => const HomePage(),
+
+      },
+      initialRoute: '/login',
     );
   }
 }
