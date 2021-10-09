@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food/pages/home/home_page.dart';
 import 'package:flutter_food/pages/login/login_page.dart';
-
+import 'package:flutter_food/pages/home/fooddetail.dart';
 void main() {
   runApp(MyApp());
 }
@@ -22,9 +22,11 @@ class MyApp extends StatelessWidget {
       ),
       home: LoginPage(),
       routes: {
-        '/login' : (context) => const LoginPage(),
-        '/home' : (context) => const HomePage(),
-
+        LoginPage.routeName : (context) => const LoginPage(),
+        //'/login' : _test,
+        //'/home' : (context) => const HomePage(),
+        HomePage.routeName : (context) => const HomePage(),
+        FoodDetail.routeName :  (context) => const FoodDetail(),
       },
       initialRoute: '/login',
     );

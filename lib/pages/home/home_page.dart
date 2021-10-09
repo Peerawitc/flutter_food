@@ -2,20 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_food/pages/home/foodpage.dart';
 import 'package:flutter_food/pages/home/profile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/foundation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
-
+  static const routeName = '/home';
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  var _subPageIndex = 0 ;
+  var _subPageIndex = 0;
+  var _selectedDrawerItemIndex = 0;
+  final _pageDataList = [
+    {
+      'icon': Icons.fastfood,
+      'title': 'Food',
+      'page': foodpage(),
+    },
+    {
+      'icon': Icons.person,
+      'title': 'Profile',
+      'page':  profilepage(),
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Flutter Food"),backgroundColor: Colors.red[200],),
+      appBar: AppBar(
+        title: Text(_pageDataList[_selectedDrawerItemIndex]['title'] as String),
+        backgroundColor: Colors.red[200],
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -58,23 +75,37 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 )),
-            ListTile(
-                title: _buildDreawerItem(Icon(Icons.fastfood,color: Colors.teal,), 'Food'),
-                onTap: () => _showSubPage(0)),
-            ListTile(
-                title: _buildDreawerItem(Icon(Icons.person,color: Colors.teal,), 'Profile'),
-                onTap: () => _showSubPage(1)
-              //Navigator.of(context).pushNamed(LoginPage.routeName);
-            ),
+            for (var item in _pageDataList)
+              ListTile(
+                  title: Row(
+                    children: [
+                      Icon(
+                        item['icon'] as IconData,
+                        color: item == _pageDataList[_selectedDrawerItemIndex]
+                            ? Theme.of(context).accentColor
+                            : null,
+                      ),
+                      SizedBox(width: 8.0),
+                      Text(item['title'] as String),
+                    ],
+                  ),
+
+                onTap: () {
+                  setState(() {
+                    _selectedDrawerItemIndex =
+                        _pageDataList.indexWhere((element) => item == element);
+                  });
+                  Navigator.of(context).pop();
+                },
+                selected: item == _pageDataList[_selectedDrawerItemIndex],
+                  ),
           ],
         ),
       ),
-      body: Container(
-        child: _buildSubPage()
-      ),
-
+      body: Container( child: _pageDataList[_selectedDrawerItemIndex]['page'] as Widget,),
     );
   }
+
   Row _buildDreawerItem(Widget icon, String title) {
     return Row(
       children: [
@@ -82,10 +113,14 @@ class _HomePageState extends State<HomePage> {
         SizedBox(
           width: 8.0,
         ),
-        Text('$title',style: GoogleFonts.roboto(fontSize: 20.0),),
+        Text(
+          '$title',
+          style: GoogleFonts.roboto(fontSize: 20.0),
+        ),
       ],
     );
   }
+
   _showSubPage(int index) {
     setState(() {
       _subPageIndex = index;
@@ -93,10 +128,11 @@ class _HomePageState extends State<HomePage> {
 
     Navigator.of(context).pop();
   }
+
   Widget _buildSubPage() {
     switch (_subPageIndex) {
       case 0:
-        return foodpage() ;
+        return foodpage();
 
       case 1:
         return profilepage();

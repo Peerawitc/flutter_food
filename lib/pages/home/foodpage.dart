@@ -48,7 +48,7 @@ class _foodpageState extends State<foodpage> {
   Widget _buildSubPage() {
     switch (indexnav) {
       case 0:
-        return menupage() ;
+        return menu() ;
 
       case 1:
         return orderpage();
