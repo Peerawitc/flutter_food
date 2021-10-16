@@ -1,8 +1,13 @@
 
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_food/pages/home/menu.dart';
 import 'package:flutter_food/pages/home/order.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'fooditem.dart';
 
 class foodpage extends StatefulWidget {
   const foodpage({Key? key}) : super(key: key);
@@ -17,6 +22,10 @@ class _foodpageState extends State<foodpage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: _test,
+        child: Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
           BottomNavigationBarItem(
@@ -63,5 +72,43 @@ class _foodpageState extends State<foodpage> {
         );
     }
   }
+  Future<void> _test() async {
+    var url = Uri.parse("https://cpsu-test-api.herokuapp.com/login");
+        var response = await http.get(url);
+    //var response = await http.post(url,body:{
+    //'pin' : '123456'
+    //});
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonBody = json.decode(response.body);
+      String status = jsonBody['status'];
+      String? message = jsonBody['message'];
+      List<dynamic> data = jsonBody['data'];
+
+      print('STATUS: $status');
+      print('MESSAGE: $message');
+      //print('data: $data');
+
+      var foodList = data.map((element) => FoodItem(
+        id: element['id'],
+        name: element['name'],
+        price: element['price'],
+        image: element['image'],
+      )).toList();
+
+      /* data.forEach((element) {
+      FoodItem(
+        id: element['id'],
+        name:  element['name'],
+        price: element['price'],
+        image: element['image'],
+
+
+      );
+      });*/
+
+    }
+  }
 
 }
+

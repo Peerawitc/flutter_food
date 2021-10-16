@@ -32,6 +32,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(_pageDataList[_selectedDrawerItemIndex]['title'] as String),
         backgroundColor: Colors.red[200],
+        actions: [
+          IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: Icon(Icons.refresh)),
+        ],
       ),
       drawer: Drawer(
         child: ListView(

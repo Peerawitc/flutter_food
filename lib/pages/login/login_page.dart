@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food/pages/home/home_page.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
   const LoginPage({Key? key}) : super(key: key);
@@ -12,31 +13,52 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   var input = '';
+
+  static const pin = '123456';
   void _handleClickButton(int num) {
     //print(num);
     setState(() {
-      if(num == -1 && input.length!=0){
-     input= input.substring(0,input.length-1);
+      if (num == -1) {
+        if (input.length > 0) input = input.substring(0, input.length - 1);
+      } else {
+        input = '$input$num';
       }
-      else if (num!=-1) {
-        input = '$input$num' ;
-      };
-      if(input=="123456" && input.length == 6){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-
-
-      }
-      else if(input!="123456" && input.length ==6){
-        _showMaterialDialog("ERROR","รหัสผ่านผิด !!");
+      if(input.length == 6){
+        _test(input);
         input = "";
 
       }
 
 
     });
+  }
+  Future<void> _test(String pin) async {
+    var url = Uri.parse("https://cpsu-test-api.herokuapp.com/login");
+    var response = await http.post(url,body:{
+      'pin' : pin
+    });
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> jsonBody = json.decode(response.body);
+      String status = jsonBody['status'];
+      String? message = jsonBody['message'];
+      bool data = jsonBody['data'];
+
+      print('STATUS: $status');
+      print('MESSAGE: $message');
+      print('data: $data');
+
+      if(data == false){
+        _showMaterialDialog('ERROR', 'Invalid PIN. Please try again.');
+      }else{
+
+        Navigator.pushReplacementNamed(context, HomePage.routeName);
+      }
+
+
+
+
+    }
   }
   void _showMaterialDialog(String title, String msg) {
     showDialog(
@@ -181,5 +203,6 @@ class LoginButton extends StatelessWidget {
       ),
     );
   }
+
 }
 
